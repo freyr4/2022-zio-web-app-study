@@ -41,3 +41,22 @@ object fibApp extends ZIOAppDefault {
     
   } yield ()
 }
+
+
+object fibApp2 extends ZIOAppDefault {
+  import scala.math.BigInt
+  
+  def fib(n: BigInt, a0: BigInt, a1:BigInt) : UIO[BigInt] = {
+    if (n == BigInt(0)) ZIO.succeed(a0 + a1)
+    else fib(n-1, a1, a0+a1)
+  }
+
+  def run = for {
+    _ <- Console.print(s"f is :")
+    n <- Console.readLine
+    k = BigInt(n.toInt)
+    f = fib(k, 0, 1)
+    _ <-f.debug
+    
+  } yield ()
+}
