@@ -12,12 +12,6 @@ object App extends ZIOAppDefault {
     } yield ()
 }
 
-object WebApp extends ZIOAppDefault {
-  // import
-  val server = ???
-  def run = ???
-}
-
 object fibApp extends ZIOAppDefault {
   import scala.math.BigInt
   implicit def Int2Big(n:Int) : BigInt = BigInt(n)
@@ -32,7 +26,7 @@ object fibApp extends ZIOAppDefault {
     case n:BigInt => fib(n-2).zipWith(fib(n-1))(_+_)
   }
 
-  def run = for {
+  override def run = for {
     _ <- Console.print(s"f is :")
     n <- Console.readLine
     k = BigInt(n.toInt)
@@ -60,3 +54,4 @@ object fibApp2 extends ZIOAppDefault {
     
   } yield ()
 }
+
