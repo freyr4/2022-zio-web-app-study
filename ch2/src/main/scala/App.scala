@@ -1,8 +1,9 @@
+package  ch2
+
 import zio._
 import zhttp.http._
 import zhttp.service.Server
 import zio.json._
-
 
 object WebApp extends ZIOAppDefault {
   

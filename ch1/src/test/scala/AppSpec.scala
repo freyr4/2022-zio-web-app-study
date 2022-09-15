@@ -1,4 +1,6 @@
+import zio._
 import zio.test._
+import zio.Console._
 
 // 서버를 테스트해보세요
 // https://zio.dev/reference/test/
@@ -6,12 +8,30 @@ import zio.test._
 // https://sttp.softwaremill.com/en/latest/backends/zio.html
 
 object AppSpec extends ZIOSpecDefault {
-  override def spec = suite("App")(
-    test("request test") {
-      assertTrue(true)
+  import ch1.AppSample._
+
+  override def spec = suite("HelloSpec")(
+    test("sayhi test") {
+      for {
+        _ <- TestConsole.feedLines("Freyr")
+        _ <- sayHi
+        out <- TestConsole.output
+      } yield assertTrue(out == Vector("Please enter your name: ", "Hello, Freyr!\n"))
     },
-    test("your test") {
-      ???
+
+    test("fib matchcase test") {
+      for {
+        _ <- TestConsole.feedLines("5")
+        f <- fibExampleMatchCase
+      } yield assertTrue(f == ZIO.succeed(BigInt(8)))
+    },
+
+    test("fib recursive test") {
+      for {
+        _ <- TestConsole.feedLines("5")
+        _ <- fibExampleRecursive
+        out <- TestConsole.output
+      } yield assertTrue(out(0) == "f is :")
     }
   )
 }
