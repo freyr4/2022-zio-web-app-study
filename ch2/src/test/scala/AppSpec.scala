@@ -6,11 +6,12 @@ import zio.test._
 // https://sttp.softwaremill.com/en/latest/backends/zio.html
 
 object AppSpec extends ZIOSpecDefault {
-  override def spec = suite("App")(
-    test("request test") {
+  import ch2.WebApp._
+  override def spec = suite("WebAppSpec")(
+    test("hello test") {
       assertTrue(true)
     },
-    test("your test") {
+    test("todo test") {
       ???
     }
   )

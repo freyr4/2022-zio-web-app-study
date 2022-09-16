@@ -24,6 +24,7 @@ object AppSpec extends ZIOSpecDefault {
         _ <- TestConsole.feedLines("5")
         f <- fibExampleMatchCase
       } yield assertTrue(f == ZIO.succeed(BigInt(8)))
+      // 여기 안되는 중
     },
 
     test("fib recursive test") {
