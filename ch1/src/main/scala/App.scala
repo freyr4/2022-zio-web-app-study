@@ -13,7 +13,7 @@ object AppSample {
       _ <- Console.printLine(s"Hello, $name!")
     } yield ()
 
-  val fibExampleMatchCase = {
+  def fibExampleMatchCase(n: BigInt) = {
     import scala.math.BigInt
     implicit def Int2Big(n: Int): BigInt = BigInt(n)
     implicit def Big2Int(n: BigInt): Int = n.toInt
@@ -27,15 +27,11 @@ object AppSample {
       case n: BigInt => fib(n - 2).zipWith(fib(n - 1))(_ + _)
     }
 
-    for {
-      _ <- Console.print(s"f is :")
-      n <- Console.readLine
-      k = BigInt(n.toInt)
-      f = fib(k)
-    } yield (f)
+    val f = fib(n)
+    f
   }
 
-  val fibExampleRecursive = {
+  def fibExampleRecursive(n: BigInt) = {
     import scala.math.BigInt
 
     def fib(n: BigInt, a0: BigInt, a1: BigInt): UIO[BigInt] = {
@@ -43,13 +39,8 @@ object AppSample {
       else fib(n - 1, a1, a0 + a1)
     }
 
-    for {
-      _ <- Console.print(s"f is :")
-      n <- Console.readLine
-      k = BigInt(n.toInt)
-      f = fib(k, 0, 1)
-      _ <- f.debug
-    } yield ()
+    val f = fib(n, 0, 1)
+    f
   }
 }
 
@@ -60,14 +51,24 @@ object App extends ZIOAppDefault {
 
 object fibApp extends ZIOAppDefault {
   import AppSample.fibExampleMatchCase
-  override def run = {
-    val f = fibExampleMatchCase
-    f.debug
-    f
-  }
+  override def run = for {
+    _ <- Console.print(s"f is : ")
+    n <- Console.readLine
+    k = BigInt(n.toIntOption.getOrElse(0))
+    f <- fibExampleMatchCase(k)
+    _ <- Console.printLine(s"$f")
+   } yield ()
 }
+
 
 object fibApp2 extends ZIOAppDefault {
   import AppSample.fibExampleRecursive
-  def run = fibExampleRecursive
+  
+  override def run = for {
+    _ <- Console.print(s"f is : ")
+    n <- Console.readLine
+    k = BigInt(n.toIntOption.getOrElse(0))
+    f <- fibExampleRecursive(k)
+    _ <- Console.printLine(s"$f")
+   } yield ()
 }

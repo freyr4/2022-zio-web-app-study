@@ -10,29 +10,42 @@ import zio.Console._
 object AppSpec extends ZIOSpecDefault {
   import ch1.AppSample._
 
-  override def spec = suite("HelloSpec")(
+  override def spec = suite("ModuleSpec")(
     test("sayhi test") {
       for {
         _ <- TestConsole.feedLines("Freyr")
         _ <- sayHi
         out <- TestConsole.output
-      } yield assertTrue(out == Vector("Please enter your name: ", "Hello, Freyr!\n"))
+      } yield assertTrue(
+        out == Vector("Please enter your name: ", "Hello, Freyr!\n")
+      )
     },
-
     test("fib matchcase test") {
       for {
-        _ <- TestConsole.feedLines("5")
-        f <- fibExampleMatchCase
-      } yield assertTrue(f == ZIO.succeed(BigInt(8)))
-      // 여기 안되는 중
+        f <- fibExampleMatchCase(BigInt(5))
+      } yield assertTrue(f == BigInt(8))
+      // 1 2 3 5 8  인거 같은데 왜 f = 13 이 나오는거지
+      // console 로 봐도  8 
     },
-
     test("fib recursive test") {
       for {
-        _ <- TestConsole.feedLines("5")
-        _ <- fibExampleRecursive
-        out <- TestConsole.output
-      } yield assertTrue(out(0) == "f is :")
+        f <- fibExampleRecursive(BigInt(5))
+      } yield assertTrue(f == BigInt(8))
+
     }
   )
 }
+
+// object AppSpec2 extends ZIOSpecDefault {
+//   // 여기는 run 앱이라 레이어 같은걸 넣어줘야 하나 
+//   import ch1.fibApp._
+//   override def spec = suite("AppSpec")(
+//     test("fib mathcase app test") {
+//       for {
+//         _ <- run
+//         _ <- TestConsole.feedLines("5")
+//         out <- TestConsole.output
+//       } yield assertTrue(out(0) == "f is :")
+//     }
+//   )
+// }
