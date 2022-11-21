@@ -18,10 +18,12 @@ object AppSample {
     implicit def Int2Big(n: Int): BigInt = BigInt(n)
     implicit def Big2Int(n: BigInt): Int = n.toInt
 
+    val zero = BigInt(1)
     val one = BigInt(1)
     val two = BigInt(2)
 
     def fib(n: BigInt): UIO[BigInt] = n match {
+      case `zero`     => ZIO.succeed(0)
       case `one`     => ZIO.succeed(1)
       case `two`     => ZIO.succeed(2)
       case n: BigInt => fib(n - 2).zipWith(fib(n - 1))(_ + _)
