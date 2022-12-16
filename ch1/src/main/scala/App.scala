@@ -2,19 +2,23 @@ package ch1
 
 import zio._
 
-// web server를 만들어 보세요
+import java.io.IOException
+import scala.annotation.tailrec
+import scala.language.implicitConversions
+import scala.math.BigInt
+
+// web server 만들어 보세요
 // https://github.com/dream11/zio-http/blob/main/example/src/main/scala/example/HelloWorld.scala
 
 object AppSample {
-  val sayHi =
+  val sayHi: ZIO[Any, IOException, Unit] =
     for {
       _ <- Console.print("Please enter your name: ")
       name <- Console.readLine
       _ <- Console.printLine(s"Hello, $name!")
     } yield ()
 
-  def fibExampleMatchCase(n: BigInt) = {
-    import scala.math.BigInt
+  def fibExampleMatchCase(n: BigInt): UIO[BigInt] = {
     implicit def Int2Big(n: Int): BigInt = BigInt(n)
     implicit def Big2Int(n: BigInt): Int = n.toInt
 
@@ -33,9 +37,9 @@ object AppSample {
     f
   }
 
-  def fibExampleRecursive(n: BigInt) = {
-    import scala.math.BigInt
+  def fibExampleRecursive(n: BigInt): UIO[BigInt] = {
 
+    @tailrec
     def fib(n: BigInt, a0: BigInt, a1: BigInt): UIO[BigInt] = {
       if (n == BigInt(0)) ZIO.succeed(a0 + a1)
       else fib(n - 1, a1, a0 + a1)
@@ -48,12 +52,12 @@ object AppSample {
 
 object App extends ZIOAppDefault {
   import AppSample.sayHi
-  def run = sayHi
+  def run: ZIO[Any, IOException, Unit] = sayHi
 }
 
 object fibApp extends ZIOAppDefault {
   import AppSample.fibExampleMatchCase
-  override def run = for {
+  override def run: ZIO[Any with ZIOAppArgs with Scope, IOException, Unit] = for {
     _ <- Console.print(s"f is : ")
     n <- Console.readLine
     k = BigInt(n.toIntOption.getOrElse(0))
@@ -66,7 +70,7 @@ object fibApp extends ZIOAppDefault {
 object fibApp2 extends ZIOAppDefault {
   import AppSample.fibExampleRecursive
   
-  override def run = for {
+  override def run: ZIO[Any with ZIOAppArgs with Scope, IOException, Unit] = for {
     _ <- Console.print(s"f is : ")
     n <- Console.readLine
     k = BigInt(n.toIntOption.getOrElse(0))

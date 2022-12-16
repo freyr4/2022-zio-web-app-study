@@ -2,6 +2,7 @@ node_modules/
 dist/
 target/
 project/
+.idea/
 
 .g8/
 .bloop/
