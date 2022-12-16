@@ -25,27 +25,29 @@ object AppSpec extends ZIOSpecDefault {
         f <- fibExampleMatchCase(BigInt(5))
       } yield assertTrue(f == BigInt(8))
       // 1 2 3 5 8  인거 같은데 왜 f = 13 이 나오는거지
-      // console 로 봐도  8 
+      // console 로 봐도  8 이라 미스테리
     },
     test("fib recursive test") {
       for {
         f <- fibExampleRecursive(BigInt(5))
       } yield assertTrue(f == BigInt(8))
-
+      // 마찬가지
     }
   )
 }
 
-// object AppSpec2 extends ZIOSpecDefault {
-//   // 여기는 run 앱이라 레이어 같은걸 넣어줘야 하나 
-//   import ch1.fibApp._
-//   override def spec = suite("AppSpec")(
-//     test("fib mathcase app test") {
-//       for {
-//         _ <- run
-//         _ <- TestConsole.feedLines("5")
-//         out <- TestConsole.output
-//       } yield assertTrue(out(0) == "f is :")
-//     }
-//   )
-// }
+object AppSpec2 extends ZIOSpecDefault {
+  // 여기는 run 앱이라 레이어 같은걸 넣어줘야 하나 
+  import ch1.fibApp._
+  override def spec = (suite("AppSpec")(
+    test("hello app test") {
+      for {
+        _ <- run
+        _ <- TestConsole.feedLines("5")
+        out <- TestConsole.output
+      } yield assertTrue(out(0) == "f is :")
+    }
+  )
+  )
+}
+
